@@ -1,0 +1,31 @@
+<com.example.liuhx.viewpagerdemo.ItemView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ccc"
+    android:orientation="vertical"
+    android:paddingTop="40dp"
+    android:paddingBottom="40dp"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp">
+
+    <TextView
+        android:id="@+id/this_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="reference info" />
+
+    <TextView
+        android:id="@+id/text1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="sample1" />
+
+    <TextView
+        android:id="@+id/text2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="sample2" />
+
+</com.example.liuhx.viewpagerdemo.ItemView>
+
