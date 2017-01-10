@@ -18,6 +18,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
   private ViewPager mViewPager;
   private ViewPageAdapter mViewPageAdapter;
+  private PieceModel mPieceModel;
 
   private class ViewPageAdapter extends PagerAdapter {
     private List<ItemView> mViewRecycler = new LinkedList<>();
@@ -25,7 +26,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public int getCount() {
-      return PieceModel.getInstance().pieces.size();
+      return mPieceModel.pieces.size();
     }
 
     @Override
@@ -45,7 +46,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
       }
       container.addView(itemView);
 
-      OnePiece onePiece = PieceModel.getInstance().pieces.get(position);
+      OnePiece onePiece = mPieceModel.pieces.get(position);
       itemView.setOnePiece(onePiece);
       mOnePieceItemViewMap.put(onePiece, itemView);
 
@@ -61,11 +62,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
       mViewRecycler.add(itemView);
     }
 
+    // Must override this method, or else notifyDataSetChanged() has no effect.
     @Override
     public int getItemPosition(Object object) {
       OnePiece onePiece = (OnePiece) object;
-      if (PieceModel.getInstance().pieces.contains(onePiece)) {
-        return PieceModel.getInstance().pieces.indexOf(onePiece);
+      if (mPieceModel.pieces.contains(onePiece)) {
+        return mPieceModel.pieces.indexOf(onePiece);
       } else {
         return POSITION_NONE;
       }
@@ -78,6 +80,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
+    mPieceModel = new PieceModel();
+    mPieceModel.setOnPiecesChangedListener(new PieceModel.OnPiecesChangedListener() {
+      @Override
+      public void onPiecesChanged() {
+        mViewPageAdapter.notifyDataSetChanged();
+      }
+    });
+
     mViewPager = (ViewPager) findViewById(R.id.view_pager);
     mViewPageAdapter = new ViewPageAdapter();
     mViewPager.setAdapter(mViewPageAdapter);
@@ -88,43 +98,36 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     findViewById(R.id.remove_head).setOnClickListener(this);
     findViewById(R.id.remove_tail).setOnClickListener(this);
     findViewById(R.id.change).setOnClickListener(this);
-
-    PieceModel.getInstance().setOnPiecesChangedListener(new PieceModel.OnPiecesChangedListener() {
-      @Override
-      public void onPiecesChanged() {
-        mViewPageAdapter.notifyDataSetChanged();
-      }
-    });
   }
 
   @Override
   public void onClick(View view) {
     switch (view.getId()) {
       case R.id.add_head:
-        PieceModel.getInstance().addPiece(false);
+        mPieceModel.addPiece(false);
         break;
       case R.id.add_tail:
-        PieceModel.getInstance().addPiece(true);
+        mPieceModel.addPiece(true);
         break;
       case R.id.remove_head:
-        if (PieceModel.getInstance().pieces.size() == 0) {
+        if (mPieceModel.pieces.size() == 0) {
           Toast.makeText(this, "Please press ADD first", Toast.LENGTH_SHORT).show();
         } else {
-          PieceModel.getInstance().removePiece(false);
+          mPieceModel.removePiece(false);
         }
         break;
       case R.id.remove_tail:
-        if (PieceModel.getInstance().pieces.size() == 0) {
+        if (mPieceModel.pieces.size() == 0) {
           Toast.makeText(this, "Please press ADD first", Toast.LENGTH_SHORT).show();
         } else {
-          PieceModel.getInstance().removePiece(true);
+          mPieceModel.removePiece(true);
         }
         break;
       case R.id.change:
-        if (PieceModel.getInstance().pieces.size() == 0) {
+        if (mPieceModel.pieces.size() == 0) {
           Toast.makeText(this, "Please press ADD first", Toast.LENGTH_SHORT).show();
         } else {
-          PieceModel.getInstance().changePieces();
+          mPieceModel.changePieces();
         }
         break;
       default:

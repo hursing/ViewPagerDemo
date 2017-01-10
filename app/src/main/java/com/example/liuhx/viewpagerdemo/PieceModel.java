@@ -12,15 +12,12 @@ public class PieceModel {
     void onPiecesChanged();
   }
 
-  private static PieceModel sInstance = new PieceModel();
   public List<OnePiece> pieces = new LinkedList<>();
 
   private OnPiecesChangedListener mOnPiecesChangedListener;
 
   private char mLetterSeed = 'A';
   private int mNumberSeed = 0;
-
-  public static PieceModel getInstance() { return sInstance; }
 
   public void setOnPiecesChangedListener(OnPiecesChangedListener listener) {
     mOnPiecesChangedListener = listener;
